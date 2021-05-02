@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './app.module.css';
 import SearchHeader from './components/search_header/search_header';
 import VideoDetail from './components/video_detail/video_detail';
@@ -12,12 +12,15 @@ function App({ youtube }) {
     setSelectedVideo(video);
   };
 
-  const search = query => {
-    setSelectedVideo(null);
-    youtube
-      .search(query)
-      .then(videos => setVideos(videos));
-  };
+  const search = useCallback(
+    query => {
+      setSelectedVideo(null);
+      youtube
+        .search(query)
+        .then(videos => setVideos(videos));
+    }, 
+    [youtube]
+  );
 
   useEffect(() => {
     // 컴포넌트(의 state나 prop)가 업데이트나 마운트 될 때 마다 반복적으로 콜백함수가 호출된다
@@ -28,7 +31,8 @@ function App({ youtube }) {
       .mostPopular()
       .then(videos => setVideos(videos));
 
-  }, []);
+  }, [youtube]);
+  
   return (
   <div className={styles.app}>
     <SearchHeader onSearch={search} />
