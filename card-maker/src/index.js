@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.module.css';
 import App from './app';
-import '@fortawesome/fontawesome-free/js/all.js'
+import AuthService from './service/auth_service';
 
+const authService = new AuthService();  // 이를 App에 dependency injection
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App authService={authService} />
   </React.StrictMode>,
   document.getElementById('root')
 );
