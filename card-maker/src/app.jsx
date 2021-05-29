@@ -12,7 +12,7 @@ function App({ authService }) {
           <Route exact path="/">
             <Login authService={authService} />
           </Route>
-          <Route paht="/maker">
+          <Route path="/maker">
             <Maker authService={authService} />
           </Route>
         </Switch>
