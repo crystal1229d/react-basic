@@ -14,7 +14,10 @@ const CardEditForm = ({ card, updateCard, deleteCard }) => {
         name, company, title, email, message, theme, fileName, fileURL 
     } = card;
     
-    const onSubmit = () => {};
+    const onSubmit = event => {
+        event.preventDefault();
+        deleteCard(card);
+    };
     const onChange = (event) => {
         if (event.currentTarget == null) {
             return;
