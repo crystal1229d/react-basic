@@ -6,7 +6,7 @@ import Header from '../header/header';
 import Preview from '../preview/preview';
 import styles from './maker.module.css';
 
-const Maker = ({ authService }) => {
+const Maker = ({ FileInput, authService }) => {
     // 주기적으로 발생하는 이벤트에 대하여 map, for loop 등을 이용할 경우, Object를 처음부터 끝까지 순차적으로 돌며 검사하기 때문에 성능에 좋지 않다. 
     // const [cards, setCards] = useState([
     //     {
@@ -119,7 +119,7 @@ const Maker = ({ authService }) => {
         <section className={styles.maker}>
             <Header onLogout={onLogout} />
             <div className={styles.container}>
-                <Editor cards={cards} addCard={createOrUpdateCard} updateCard={createOrUpdateCard} deleteCard={deleteCard} />
+                <Editor FileInput={FileInput} cards={cards} addCard={createOrUpdateCard} updateCard={createOrUpdateCard} deleteCard={deleteCard} />
                 <Preview cards={cards} />
             </div>
             <Footer />
