@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import Button from '../button/button';
+import Preview from '../preview/preview';
 import styles from './card_edit_form.module.css';
 
 const CardEditForm = ({ FileInput, card, updateCard, deleteCard }) => {
@@ -17,6 +18,15 @@ const CardEditForm = ({ FileInput, card, updateCard, deleteCard }) => {
         event.preventDefault();
         deleteCard(card);
     };
+
+    const onFileChange = file => {
+        updateCard({
+            ...card,
+            fileName: file.name,
+            fileURL: file.url
+        })
+    };
+
     const onChange = (event) => {
         if (event.currentTarget == null) {
             return;
@@ -42,7 +52,7 @@ const CardEditForm = ({ FileInput, card, updateCard, deleteCard }) => {
             <input ref={emailRef} className={styles.input} type="text" name="email" value={email} onChange={onChange} />
             <textarea ref={messageRef} className={styles.textarea} name="message" value={message} onChange={onChange} ></textarea>
             <div className={styles.fileInput}>
-                <FileInput />
+                <FileInput onFileChange={onFileChange} />
             </div>
             <Button name='Delete' onClick={onSubmit} />
         </form>
