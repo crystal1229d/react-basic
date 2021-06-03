@@ -11,7 +11,7 @@ const CardEditForm = ({ FileInput, card, updateCard, deleteCard }) => {
     const emailRef = useRef();
     const messageRef = useRef();
     const { 
-        name, company, title, email, message, theme, fileName, fileURL 
+        name, company, title, email, message, theme, fileName
     } = card;
     
     const onSubmit = event => {
