@@ -10,17 +10,31 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
     // const [cards, setCards] = useState( [{ id:'1', name:'A' }, { id: '2', name: 'B' }] );
     // 위의 문제로 인해 성능 개선을 위해 Array대신 Object 사용, 로직 변경
     // const [cards, setCards] = useState({ '1': {id:'1', name: 'A'}, '2': {id: '2', name: 'B'} });
-    const historyState = useHistory().state;    // check login status
+    const history = useHistory();    // check login status
+    const historyState = history?.location?.state;
     const [cards, setCards] = useState({});
     const [userId, setUserId] = useState(historyState && historyState.id);
-
-    const history = useHistory();
 
     const onLogout = () => {
         authService.logout();
     };
 
     useEffect(() => {
+        // handling Cards DATA
+        if (!userId) {
+            return;
+        }
+        const stopSync = cardRepository.syncCards(userId, cards => {
+            setCards(cards);
+        });
+        // userEffect 에서 어떤 함수를 return 하면 리액트에서 자동으로 컴포넌트가 unmount 됐을 때 return한 함수를 호출
+        // 따라서 이 부분에서 리소스와 메모리를 정리하는 일들을 처리하면 된다.
+        return () => stopSync();    // 컴포넌트가 언마운트 되었을 때 불필요한 네트워크 사용 최소화 (ref.off())
+
+    }, [userId]);
+
+    useEffect(() => {
+        // handling LOGIN
         authService.onAuthChange(user => {
             if (user) {
                 setUserId(user.uid);
@@ -50,6 +64,7 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
             delete updated[card.id];
             return updated;
         });
+        cardRepository.removeCard(userId, card);
     };
 
     return (
