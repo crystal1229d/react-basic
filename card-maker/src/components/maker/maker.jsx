@@ -6,79 +6,13 @@ import Header from '../header/header';
 import Preview from '../preview/preview';
 import styles from './maker.module.css';
 
-const Maker = ({ FileInput, authService }) => {
-    // 주기적으로 발생하는 이벤트에 대하여 map, for loop 등을 이용할 경우, Object를 처음부터 끝까지 순차적으로 돌며 검사하기 때문에 성능에 좋지 않다. 
-    // const [cards, setCards] = useState([
-    //     {
-    //         id: '1',
-    //         name: 'Crystal',
-    //         company: 'Google',
-    //         theme: 'light',
-    //         title: 'Software Engineer',
-    //         email: 'leecrystal1229d@gmail.com',
-    //         message: 'just do it',
-    //         fileName: 'crystal',
-    //         fileURL: 'crystal.png'
-    //     },
-    //     {
-    //         id: '2',
-    //         name: 'Giho',
-    //         company: 'KAI',
-    //         theme: 'dark',
-    //         title: 'CEO',
-    //         email: 'skyrabbit@gmail.com',
-    //         message: 'i love camping',
-    //         fileName: 'giho',
-    //         fileURL: ''
-    //     },
-    //     {
-    //         id: '3',
-    //         name: 'Hyojung',
-    //         company: 'SNP',
-    //         theme: 'colorful',
-    //         title: 'student',
-    //         email: 'hyojung@gmail.com',
-    //         message: 'love yourself',
-    //         fileName: 'hyojung',
-    //         fileURL: ''
-    //     }
-    // ]);
+const Maker = ({ FileInput, authService, cardRepository }) => {
+    // const [cards, setCards] = useState( [{ id:'1', name:'A' }, { id: '2', name: 'B' }] );
     // 위의 문제로 인해 성능 개선을 위해 Array대신 Object 사용, 로직 변경
-    const [cards, setCards] = useState({
-        '1': {
-                id: '1',
-                name: 'Crystal',
-                company: 'Google',
-                theme: 'light',
-                title: 'Software Engineer',
-                email: 'leecrystal1229d@gmail.com',
-                message: 'just do it',
-                fileName: 'crystal',
-                fileURL: 'crystal.png'
-            },
-        '2' : {
-                id: '2',
-                name: 'Giho',
-                company: 'KAI',
-                theme: 'dark',
-                title: 'CEO',
-                email: 'skyrabbit@gmail.com',
-                message: 'i love camping',
-                fileName: 'giho',
-                fileURL: ''
-            },
-        '3' : {
-                id: '3',
-                name: 'Hyojung',
-                company: 'SNP',
-                theme: 'colorful',
-                title: 'student',
-                email: 'hyojung@gmail.com',
-                message: 'love yourself',
-                fileName: 'hyojung',
-                fileURL: ''
-            },
-    });
+    // const [cards, setCards] = useState({ '1': {id:'1', name: 'A'}, '2': {id: '2', name: 'B'} });
+    const historyState = useHistory().state;    // check login status
+    const [cards, setCards] = useState({});
+    const [userId, setUserId] = useState(historyState && historyState.id);
 
     const history = useHistory();
 
@@ -88,7 +22,9 @@ const Maker = ({ FileInput, authService }) => {
 
     useEffect(() => {
         authService.onAuthChange(user => {
-            if (!user) {
+            if (user) {
+                setUserId(user.uid);
+            } else {
                 history.push('/');
             }
         });
@@ -106,6 +42,7 @@ const Maker = ({ FileInput, authService }) => {
             updated[card.id] = card;
             return updated;
         });
+        cardRepository.saveCard(userId, card);
     };
     const deleteCard = card => {
         setCards(cards => {
