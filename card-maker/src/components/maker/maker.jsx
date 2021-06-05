@@ -31,7 +31,7 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
         // 따라서 이 부분에서 리소스와 메모리를 정리하는 일들을 처리하면 된다.
         return () => stopSync();    // 컴포넌트가 언마운트 되었을 때 불필요한 네트워크 사용 최소화 (ref.off())
 
-    }, [userId]);
+    }, [userId, cardRepository]); // userId, cardRepository 가 변경될 때마다 위의 코드 호출
 
     useEffect(() => {
         // handling LOGIN
@@ -42,7 +42,7 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
                 history.push('/');
             }
         });
-    });
+    }, [authService, userId, history]);  // * 되도록이면 안에서 사용하고 있는 데이터가 변경되었을 때 update 될 수 있게끔 한다.
 
     const createOrUpdateCard = card => {
         // const updated = {...cards};
