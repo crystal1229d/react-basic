@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import ReactDOM from 'react-dom';
 import './index.module.css';
 import App from './app';
@@ -10,9 +10,9 @@ import CardRepository from './service/card_repository';
 const authService = new AuthService();  // 이를 App에 dependency injection
 const cardRepository = new CardRepository(); // card data from DB
 const imageUploader = new ImageUploader(); // dependency injection
-const FileInput = props => (
+const FileInput = memo(props => (
   <ImageFileInput {...props} imageUploader={imageUploader} />
-);
+));
 ReactDOM.render(
   <React.StrictMode>
     <App authService={authService} FileInput={FileInput} cardRepository={cardRepository} />
